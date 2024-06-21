@@ -23,6 +23,7 @@ public:
   unsigned char getDivider(void);
   void setDivider(unsigned char divider = 1);
   void shiftDividerCounter(char value = 1);
+  bool hasZC(void);
 
 private:
   static inline void onZCInterrupt(void);
@@ -40,6 +41,7 @@ private:
   volatile unsigned int _value;
   volatile unsigned int _a;
   volatile bool _skip = true;
+  volatile bool _zcCrossed;
   volatile long _counter;
   volatile long _stopAfter;
   volatile unsigned long _lastMillis = 0;
