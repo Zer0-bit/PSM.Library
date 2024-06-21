@@ -21,6 +21,7 @@ PSM::PSM(unsigned char sensePin, unsigned char controlPin, unsigned int range, i
 
   PSM::_range = range;
   PSM::_interruptMinTimeDiff = interruptMinTimeDiff;
+  PSM::_zcCrossed = false;
 }
 
 void onPSMInterrupt() __attribute__((weak));
@@ -38,6 +39,7 @@ void PSM::onZCInterrupt(void) {
   onPSMInterrupt();
 
   _thePSM->calculateSkipFromZC();
+  _thePSM->_zcCrossed = true;
 
   if (_thePSM->_psmIntervalTimerInitialized) {
     _thePSM->_psmIntervalTimer->setCount(0);
@@ -159,6 +161,12 @@ void PSM::setDivider(unsigned char divider) {
 
 void PSM::shiftDividerCounter(char value) {
   PSM::_dividerCounter += value;
+}
+
+bool PSM::hasZC() {
+  bool crossed = _zcCrossed;
+  _zcCrossed = false;
+  return crossed;
 }
 
 void PSM::initTimer(uint16_t delay, TIM_TypeDef* timerInstance) {
